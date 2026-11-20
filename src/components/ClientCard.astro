@@ -1,0 +1,45 @@
+---
+import type { Project } from "@/data/site";
+
+interface Props {
+  project: Project;
+  index: number;
+}
+const { project: p, index } = Astro.props;
+---
+
+<article class="reveal card group flex flex-col p-3" style={`--delay: ${index * 80}ms`}>
+  <a href={p.url} target="_blank" rel="noopener" class="frame block" aria-label={`Visit ${p.name} (opens in a new tab)`}>
+    <img
+      src={p.image}
+      alt={`Homepage of ${p.name}`}
+      width="1440"
+      height="900"
+      loading="lazy"
+      decoding="async"
+      class="aspect-[16/10] w-full object-cover object-top"
+    />
+  </a>
+  <div class="flex flex-1 flex-col px-2 pt-5 pb-3">
+    <p class="label">{p.role}</p>
+    <h3 class="mt-2 text-xl font-semibold tracking-tight">{p.name}</h3>
+    <p class="mt-2 text-sm leading-relaxed text-muted">{p.summary}</p>
+    <ul class="mt-4 space-y-2">
+      {
+        p.highlights.map((h) => (
+          <li class="flex gap-2.5 text-[13px] leading-relaxed text-subtle">
+            <span class="mt-[7px] size-1 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+            <span>{h}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <ul class="mt-5 flex flex-wrap gap-1.5" aria-label="Tech stack">
+      {p.stack.map((s) => <li class="pill">{s}</li>)}
+    </ul>
+    <a href={p.url} target="_blank" rel="noopener" class="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium">
+      <span class="link-underline">{p.urlLabel}</span>
+      <svg class="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+</article>

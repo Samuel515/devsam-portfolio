@@ -1,0 +1,15 @@
+---
+interface Props {
+  index: string;
+  label: string;
+  title: string;
+  intro?: string;
+}
+const { index, label, title, intro } = Astro.props;
+---
+
+<header class="reveal mb-12 max-w-3xl sm:mb-16">
+  <p class="label"><span class="text-accent">{index}</span> / {label}</p>
+  <h2 class="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">{title}</h2>
+  {intro && <p class="mt-5 text-lg leading-relaxed text-muted text-pretty">{intro}</p>}
+</header>

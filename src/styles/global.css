@@ -1,0 +1,278 @@
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------- Design tokens ---------- */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.145 0.004 160);
+  --bg-elev: oklch(0.18 0.005 160);
+  --bg-hover: oklch(0.21 0.006 160);
+  --line: oklch(1 0 0 / 0.08);
+  --line-strong: oklch(1 0 0 / 0.16);
+  --fg: oklch(0.96 0.004 160);
+  --fg-muted: oklch(0.72 0.01 160);
+  --fg-subtle: oklch(0.56 0.01 160);
+  --accent: oklch(0.86 0.17 162);
+  --accent-fg: oklch(0.2 0.04 162);
+  --accent-soft: oklch(0.86 0.17 162 / 0.12);
+  --grid: oklch(1 0 0 / 0.035);
+  --shadow: 0 1px 0 oklch(1 0 0 / 0.04) inset, 0 20px 50px -20px oklch(0 0 0 / 0.6);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: oklch(0.985 0.002 160);
+  --bg-elev: oklch(1 0 0);
+  --bg-hover: oklch(0.96 0.004 160);
+  --line: oklch(0.2 0.01 160 / 0.1);
+  --line-strong: oklch(0.2 0.01 160 / 0.18);
+  --fg: oklch(0.18 0.01 160);
+  --fg-muted: oklch(0.42 0.012 160);
+  --fg-subtle: oklch(0.55 0.012 160);
+  --accent: oklch(0.56 0.14 162);
+  --accent-fg: oklch(0.99 0.01 162);
+  --accent-soft: oklch(0.56 0.14 162 / 0.1);
+  --grid: oklch(0.2 0.01 160 / 0.045);
+  --shadow: 0 1px 2px oklch(0 0 0 / 0.04), 0 20px 40px -24px oklch(0 0 0 / 0.18);
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-hover: var(--bg-hover);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-subtle: var(--fg-subtle);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+}
+
+/* ---------- Base ---------- */
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+/* Pause colour transitions while the theme switches, so the reveal circle stays crisp.
+   The toggle's own icons keep animating. */
+html.theme-switching *:not(.theme-icon),
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
+/* Theme reveal (see Nav.astro): the new theme grows out of the toggle as a circle.
+   Turn off the browser's default cross-fade so the old page doesn't flash. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+
+/* ---------- Scrollbar ---------- */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) var(--bg);
+}
+@supports selector(::-webkit-scrollbar) {
+  html { scrollbar-color: auto; }
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); border-left: 1px solid var(--line); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ---------- Custom cursor (desktop with a mouse only, set up in Base.astro) ---------- */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  pointer-events: none;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--accent);
+}
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 1px solid var(--accent);
+}
+.cursor-ring > span {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  transition: transform 0.25s cubic-bezier(0.33, 1, 0.68, 1), background-color 0.25s ease;
+}
+.cursor-ring.is-hover > span {
+  transform: scale(1.55);
+  background: var(--accent-soft);
+}
+html.cursor-ready .cursor-dot,
+html.cursor-ready .cursor-ring { opacity: 1; }
+html.cursor-ready.cursor-out .cursor-dot,
+html.cursor-ready.cursor-out .cursor-ring { opacity: 0; }
+html.cursor-ready,
+html.cursor-ready * { cursor: none !important; }
+
+/* ---------- Theme toggle icons ---------- */
+.theme-icon {
+  position: absolute;
+  transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+}
+[data-theme="dark"] .theme-icon--moon,
+[data-theme="light"] .theme-icon--sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Faint engineering grid that fades out toward the bottom of the hero. */
+.bg-grid {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 30%, transparent 75%);
+}
+.glow {
+  background: radial-gradient(closest-side, var(--accent-soft), transparent);
+}
+
+/* Section label, e.g. "01 / Products". */
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+/* Card with a spotlight that follows the cursor (set by script in Base layout). */
+.card {
+  position: relative;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), var(--accent-soft), transparent 40%);
+}
+.card:hover {
+  border-color: var(--line-strong);
+}
+.card:hover::before {
+  opacity: 1;
+}
+
+/* Browser-window frame around project screenshots. */
+.frame {
+  border: 1px solid var(--line);
+  border-radius: 0.875rem;
+  overflow: hidden;
+  background: var(--bg);
+}
+.frame img {
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.group:hover .frame img {
+  transform: scale(1.025);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease;
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* ---------- Motion ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--delay, 0ms);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+.no-js .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 var(--accent-soft); }
+  50% { box-shadow: 0 0 0 6px transparent; }
+}
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .status-dot { animation: none; }
+  .group:hover .frame img { transform: none; }
+}
