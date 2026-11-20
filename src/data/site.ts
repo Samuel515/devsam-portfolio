@@ -191,3 +191,17 @@ export const contact = {
   heading: "Let's build something worth trusting.",
   body: "I'm open to full-time roles, freelance and contract work, and collaborations. I'm also glad to talk with investors about VerityWave and with reviewers about study opportunities.",
 };
+
+// Free, open-source browser tools at *.devsamc.xyz. Hues match each tool's accent colour.
+export const toolsRepo = "https://github.com/Samuel515/devsam-tools";
+export const tools = [
+  { name: "Markdown Reader", url: "https://md.devsamc.xyz", tagline: "Read, edit and export Markdown files.", hue: 255, glyph: "MD" },
+  { name: "Image Converter", url: "https://image.devsamc.xyz", tagline: "HEIC, WebP, PNG, JPG, AVIF and more.", hue: 45, glyph: "IM" },
+  { name: "PDF to Image", url: "https://pdf2img.devsamc.xyz", tagline: "Turn PDF pages into high-quality images.", hue: 25, glyph: "P→" },
+  { name: "Image Compressor", url: "https://compress.devsamc.xyz", tagline: "Shrink images by up to 80% with mozjpeg.", hue: 185, glyph: "CP" },
+  { name: "PDF Toolkit", url: "https://pdf.devsamc.xyz", tagline: "Merge, split, rotate and create PDFs.", hue: 350, glyph: "PDF" },
+  { name: "QR Code Generator", url: "https://qr.devsamc.xyz", tagline: "Styled QR codes for links, Wi-Fi and WhatsApp.", hue: 295, glyph: "QR" },
+  { name: "Dev Formatter", url: "https://dev.devsamc.xyz", tagline: "JSON, Base64, URL encoding and JWTs.", hue: 85, glyph: "{}" },
+  { name: "Code Minifier", url: "https://minify.devsamc.xyz", tagline: "Minify JavaScript, CSS, HTML and JSON.", hue: 215, glyph: "MN" },
+  { name: "JavaScript Obfuscator", url: "https://obfuscate.devsamc.xyz", tagline: "Protect JavaScript from copying.", hue: 140, glyph: "OB" },
+];
