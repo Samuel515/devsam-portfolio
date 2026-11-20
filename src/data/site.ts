@@ -1,5 +1,5 @@
 // All copy and data for the portfolio lives here.
-// Edit this file to change what the site says; components only handle layout.
+// Edit this file to change what the site says; components only handle layout. 
 
 export const person = {
   name: "Samuel Ogbodo",
