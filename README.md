@@ -65,12 +65,16 @@ Switching themes works like the Eurovic site: the new theme spreads out from the
 
 The accent is mint green, set as `--accent` in [`src/styles/global.css`](src/styles/global.css) for each theme.
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
-1. In the Cloudflare dashboard, go to **Workers & Pages → Create → Pages → Connect to Git** and pick this repository.
-2. Set the framework preset to **Astro**, the build command to `npm run build`, and the output directory to `dist`.
-3. Add the environment variable `NODE_VERSION` = `22`.
-4. After the first deploy, open **Custom domains** and add `devsamc.xyz`, plus `www.devsamc.xyz` if you want it redirected.
+The site runs as the Cloudflare Worker `devsam-portfolio`, configured in [`wrangler.jsonc`](wrangler.jsonc). It serves the static build from `dist/` and shows `404.html` for unknown URLs.
+
+| Setting | Value |
+| --- | --- |
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` |
+
+The custom domain `devsamc.xyz` is managed under the Worker's **Settings → Domains & Routes** in the Cloudflare dashboard. The Worker name in Cloudflare must match `name` in `wrangler.jsonc`.
 
 Security and cache headers are set in [`public/_headers`](public/_headers).
 

@@ -5,11 +5,13 @@ import { person, products, clientWork } from "@/data/site";
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
   title = `${person.name} · ${person.role}`,
   description = "Samuel Ogbodo is a fullstack software engineer and co-founder & CTO of VerityWave, building AI content verification, conversational fintech and web platforms from interface to infrastructure.",
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -56,6 +58,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta name="author" content={person.name} />
 
     <!-- Theme: a saved choice wins; otherwise follow the system; dark if the system reports nothing. -->
