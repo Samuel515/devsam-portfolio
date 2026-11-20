@@ -204,4 +204,9 @@ export const tools = [
   { name: "Dev Formatter", url: "https://dev.devsamc.xyz", tagline: "JSON, Base64, URL encoding and JWTs.", hue: 85, glyph: "{}" },
   { name: "Code Minifier", url: "https://minify.devsamc.xyz", tagline: "Minify JavaScript, CSS, HTML and JSON.", hue: 215, glyph: "MN" },
   { name: "JavaScript Obfuscator", url: "https://obfuscate.devsamc.xyz", tagline: "Protect JavaScript from copying.", hue: 140, glyph: "OB" },
+  { name: "Background Remover", url: "https://bg.devsamc.xyz", tagline: "AI background removal that runs in the browser.", hue: 320, glyph: "BG" },
+  { name: "Image Resizer", url: "https://resize.devsamc.xyz", tagline: "Social, passport and custom sizes, perfectly framed.", hue: 60, glyph: "RS" },
+  { name: "PDF Compressor", url: "https://pdfcompress.devsamc.xyz", tagline: "Shrink PDFs for email and upload limits.", hue: 10, glyph: "PC" },
+  { name: "Word Counter", url: "https://words.devsamc.xyz", tagline: "Words, characters, reading time and keywords.", hue: 235, glyph: "WC" },
+  { name: "Password Generator", url: "https://password.devsamc.xyz", tagline: "Strong passwords and memorable passphrases.", hue: 165, glyph: "PW" },
 ];
