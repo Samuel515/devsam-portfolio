@@ -1,0 +1,139 @@
+---
+import Base from "@/layouts/Base.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import HireButtons from "@/components/HireButtons.astro";
+import { hire, clientWork, person } from "@/data/site";
+
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: hire.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+
+<Base
+  title={`Work with me · Websites and web apps · ${person.name}`}
+  description="Hire Samuel Ogbodo to design and build your business website, online store, booking system, web app or WhatsApp automation. Clear starting prices, delivered in days."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} slot="head" />
+  <Nav />
+  <main id="main">
+    <section class="relative overflow-hidden pt-36 pb-16 sm:pt-44 sm:pb-24">
+      <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="glow pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+        <p class="reveal label"><span class="text-accent">Work with me</span> / Services</p>
+        <h1 class="reveal mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-balance" style="--delay: 60ms">
+          {hire.headline}
+        </h1>
+        <p class="reveal mt-8 max-w-2xl text-lg leading-relaxed text-muted text-pretty sm:text-xl" style="--delay: 120ms">{hire.intro}</p>
+        <HireButtons class="reveal mt-10" />
+        <p class="reveal mt-8 text-sm text-subtle" style="--delay: 200ms">
+          Recent sites:{" "}
+          {
+            clientWork.map((c, i) => (
+              <>
+                <a href={c.url} target="_blank" rel="noopener" class="text-muted underline decoration-line-strong underline-offset-4 hover:text-fg">{c.name}</a>
+                {i < clientWork.length - 1 ? " · " : ""}
+              </>
+            ))
+          }
+        </p>
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28" aria-labelledby="services">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <header class="reveal mb-12 max-w-3xl">
+          <p class="label"><span class="text-accent">01</span> / What I build</p>
+          <h2 id="services" class="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">Clear packages, honest prices.</h2>
+          <p class="mt-5 text-lg leading-relaxed text-muted text-pretty">Starting prices for a typical project. Your quote depends on what you need, and you'll get it in writing before any work starts.</p>
+        </header>
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {
+            hire.services.map((s, i) => (
+              <article class="reveal card flex flex-col p-6" style={`--delay: ${(i % 3) * 70}ms`}>
+                <h3 class="text-xl font-semibold tracking-tight">{s.name}</h3>
+                <p class="mt-3">
+                  <span class="text-sm text-subtle">from </span>
+                  <span class="text-2xl font-semibold tracking-tight text-accent">{s.price}</span>
+                </p>
+                <p class="mt-1 font-mono text-xs text-subtle">{s.time}</p>
+                <p class="mt-4 text-sm leading-relaxed text-muted">{s.summary}</p>
+                <ul class="mt-5 space-y-2 border-t border-line pt-5">
+                  {s.includes.map((x) => (
+                    <li class="flex gap-2.5 text-[13px] leading-relaxed text-subtle">
+                      <span class="mt-[7px] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                      {x}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+        <p class="reveal mt-8 rounded-2xl border border-line bg-elev/60 p-5 text-sm leading-relaxed text-muted sm:p-6">{hire.agencies}</p>
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28" aria-labelledby="process">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <header class="reveal mb-12 max-w-3xl">
+          <p class="label"><span class="text-accent">02</span> / How it works</p>
+          <h2 id="process" class="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">From first message to launch.</h2>
+        </header>
+        <ol class="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {
+            hire.process.map((p, i) => (
+              <li class="reveal bg-bg p-6" style={`--delay: ${i * 70}ms`}>
+                <span class="font-mono text-xs text-accent">0{i + 1}</span>
+                <h3 class="mt-3 text-lg font-semibold tracking-tight">{p.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-muted">{p.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28" aria-labelledby="faq">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8">
+        <header class="reveal mb-10">
+          <p class="label"><span class="text-accent">03</span> / Questions</p>
+          <h2 id="faq" class="mt-4 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">Good to know.</h2>
+        </header>
+        <div class="border-t border-line">
+          {
+            hire.faqs.map((f) => (
+              <details class="reveal group border-b border-line" data-smooth>
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-medium tracking-tight [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <span class="text-xl leading-none text-subtle transition-transform duration-300 group-[.is-open]:rotate-45" aria-hidden="true">+</span>
+                </summary>
+                <p class="pb-5 text-sm leading-relaxed text-muted">{f.a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="relative overflow-hidden border-t border-line py-24 sm:py-32">
+      <div class="glow pointer-events-none absolute -bottom-60 left-1/2 h-[500px] w-[900px] -translate-x-1/2" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+        <h2 class="reveal max-w-3xl text-[clamp(2.25rem,6vw,4.5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-balance">Have a project in mind?</h2>
+        <p class="reveal mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty">
+          Send a message with what you need and your rough budget. I'll reply within a day. WhatsApp: {hire.whatsappLabel}.
+        </p>
+        <HireButtons class="reveal mt-10" />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  import { smoothDetails } from "@/scripts/accordion";
+  smoothDetails();
+</script>

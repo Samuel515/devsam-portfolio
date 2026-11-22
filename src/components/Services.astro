@@ -1,0 +1,39 @@
+---
+// Home page teaser for the "Work with me" page.
+import SectionHeader from "./SectionHeader.astro";
+import HireButtons from "./HireButtons.astro";
+import { hire } from "@/data/site";
+
+const featured = hire.services.filter((s) => s.featured);
+---
+
+<section id="services" class="border-t border-line py-24 sm:py-32">
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
+    <SectionHeader
+      index="06"
+      label="Work with me"
+      title="Need a website or web app?"
+      intro="I build fast, search-friendly websites, online stores and custom software for businesses, with clear starting prices."
+    />
+    <div class="grid gap-5 md:grid-cols-3">
+      {
+        featured.map((s, i) => (
+          <a href="/work-with-me/" class="reveal card group flex flex-col p-6" style={`--delay: ${i * 70}ms`}>
+            <h3 class="text-lg font-semibold tracking-tight">{s.name}</h3>
+            <p class="mt-2">
+              <span class="text-sm text-subtle">from </span>
+              <span class="text-xl font-semibold tracking-tight text-accent">{s.price}</span>
+            </p>
+            <p class="mt-3 text-sm leading-relaxed text-muted">{s.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+    <div class="reveal mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+      <HireButtons />
+      <a href="/work-with-me/" class="text-sm font-medium text-muted underline decoration-line-strong underline-offset-4 hover:text-fg">
+        See all services and how it works →
+      </a>
+    </div>
+  </div>
+</section>

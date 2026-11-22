@@ -1,0 +1,248 @@
+---
+import "@/styles/global.css";
+import { person, products, clientWork } from "@/data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = `${person.name} · ${person.role}`,
+  description = "Samuel Ogbodo is a fullstack software engineer and co-founder & CTO of VerityWave, building AI content verification, conversational fintech and web platforms from interface to infrastructure.",
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL("/og.png", Astro.site).href;
+
+const sameAs = [person.linkedin, person.github].filter(Boolean);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      name: person.name,
+      url: person.url,
+      jobTitle: person.role,
+      worksFor: { "@type": "Organization", name: "VerityWave Innovations Ltd.", url: "https://veritywave.com" },
+      alumniOf: { "@type": "CollegeOrUniversity", name: "Renaissance University" },
+      address: { "@type": "PostalAddress", addressCountry: "NG" },
+      ...(sameAs.length ? { sameAs } : {}),
+    },
+    {
+      "@type": "WebSite",
+      name: person.name,
+      url: person.url,
+    },
+    {
+      "@type": "ItemList",
+      name: "Selected work",
+      itemListElement: [...products, ...clientWork].map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: p.url,
+        name: p.name,
+      })),
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" class="no-js" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="author" content={person.name} />
+    <meta name="google-adsense-account" content="ca-pub-7349479508743936" />
+
+    <!-- Saved theme, else system preference, else dark. Runs before paint. -->
+    <script is:inline>
+      (() => {
+        const d = document.documentElement;
+        d.classList.remove("no-js");
+        let t = null;
+        try { t = localStorage.getItem("theme"); } catch {}
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        d.dataset.theme = t;
+      })();
+    </script>
+    <meta name="theme-color" content="#0b0f0d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9fbfa" media="(prefers-color-scheme: light)" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <slot name="head" />
+  </head>
+  <body class="min-h-dvh bg-bg text-fg selection:bg-accent">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-fg"
+      >Skip to content</a
+    >
+    <slot />
+
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"><span></span></div>
+
+    <script>
+      // ---------- Section links: /?about scrolls to #about, then the URL goes back to / ----------
+      const SECTIONS = ["work", "clients", "tools", "about", "experience", "services", "contact"];
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const sectionFromSearch = (search: string) => {
+        const keys = [...new URLSearchParams(search).keys()];
+        return keys.find((k) => SECTIONS.includes(k)) ?? null;
+      };
+
+      // Clear the parameter as soon as the visitor reaches the section.
+      // "Reached" means the section's top has arrived under the nav bar, or the page can't scroll further.
+      let stopWatching: (() => void) | null = null;
+      const clearWhenReached = (el: HTMLElement) => {
+        stopWatching?.();
+        const check = () => {
+          const top = el.getBoundingClientRect().top;
+          const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+          if ((top >= -40 && top <= 120) || atBottom) {
+            history.replaceState(history.state, "", location.pathname + location.hash);
+            stopWatching?.();
+          }
+        };
+        window.addEventListener("scroll", check, { passive: true });
+        stopWatching = () => {
+          window.removeEventListener("scroll", check);
+          stopWatching = null;
+        };
+        requestAnimationFrame(check);
+      };
+
+      const goTo = (id: string, smooth: boolean) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        history.replaceState(history.state, "", `/?${id}`);
+        el.scrollIntoView({ behavior: smooth && !reduceMotion ? "smooth" : "instant", block: "start" });
+        clearWhenReached(el);
+      };
+
+      document.addEventListener("click", (ev) => {
+        if (ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+        const a = (ev.target as HTMLElement).closest<HTMLAnchorElement>("a[href]");
+        if (!a || a.target === "_blank") return;
+        const url = new URL(a.href, location.href);
+        if (url.origin !== location.origin || url.pathname !== location.pathname) return;
+        const id = sectionFromSearch(url.search);
+        if (id) {
+          ev.preventDefault();
+          goTo(id, true);
+        } else if (a.dataset.section === "top") {
+          ev.preventDefault();
+          history.replaceState(history.state, "", "/");
+          window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+        }
+      });
+
+      // Arriving from a shared link such as devsamc.xyz/?about
+      const initial = sectionFromSearch(location.search);
+      if (initial) {
+        const run = () => goTo(initial, false);
+        if (document.readyState === "complete") run();
+        else window.addEventListener("load", run, { once: true });
+      }
+
+      // ---------- Custom cursor (mouse users only, off when reduced motion is requested) ----------
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion) {
+        const dot = document.querySelector<HTMLElement>(".cursor-dot")!;
+        const ring = document.querySelector<HTMLElement>(".cursor-ring")!;
+        const html = document.documentElement;
+        let x = -100, y = -100, rx = -100, ry = -100;
+        let started = false;
+
+        const frame = () => {
+          // ring eases toward the pointer
+          rx += (x - rx) * 0.2;
+          ry += (y - ry) * 0.2;
+          ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+          requestAnimationFrame(frame);
+        };
+
+        window.addEventListener("pointermove", (e) => {
+          if (e.pointerType !== "mouse") return;
+          x = e.clientX;
+          y = e.clientY;
+          dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          if (!started) {
+            started = true;
+            rx = x;
+            ry = y;
+            html.classList.add("cursor-ready");
+            requestAnimationFrame(frame);
+          }
+          html.classList.remove("cursor-out");
+        }, { passive: true });
+
+        document.addEventListener("mouseleave", () => html.classList.add("cursor-out"));
+        document.addEventListener("pointerover", (e) => {
+          const hit = (e.target as HTMLElement).closest("a, button, [role='button'], input, textarea, select, label, [data-cursor='hover']");
+          ring.classList.toggle("is-hover", !!hit);
+        });
+      }
+    </script>
+
+    <script>
+      // Scroll reveal
+      const els = document.querySelectorAll<HTMLElement>(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("in"));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+        );
+        els.forEach((el) => io.observe(el));
+      }
+
+      // Cursor spotlight on cards
+      if (window.matchMedia("(hover: hover)").matches) {
+        document.addEventListener("pointermove", (e) => {
+          const card = (e.target as HTMLElement).closest<HTMLElement>(".card");
+          if (!card) return;
+          const r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+          card.style.setProperty("--my", `${e.clientY - r.top}px`);
+        });
+      }
+    </script>
+  </body>
+</html>

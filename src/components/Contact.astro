@@ -1,0 +1,60 @@
+---
+import { contact, person } from "@/data/site";
+
+const strip = (u: string) => u.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+const channels = [
+  { label: "Email", value: person.email, href: person.email ? `mailto:${person.email}` : "", external: false },
+  { label: "LinkedIn", value: strip(person.linkedin), href: person.linkedin, external: true },
+  { label: "GitHub", value: strip(person.github), href: person.github, external: true },
+];
+const visible = channels.filter((c) => c.href);
+const primary = person.email ? `mailto:${person.email}` : person.linkedin;
+---
+
+<section id="contact" class="relative overflow-hidden border-t border-line py-28 sm:py-36">
+  <div class="glow pointer-events-none absolute -bottom-60 left-1/2 h-[500px] w-[900px] -translate-x-1/2" aria-hidden="true">
+  </div>
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+    <p class="reveal label"><span class="text-accent">07</span> / Contact</p>
+    <h2
+      class="reveal mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-balance"
+    >
+      {contact.heading}
+    </h2>
+    <p class="reveal mt-6 max-w-2xl text-lg leading-relaxed text-muted text-pretty">{contact.body}</p>
+
+    {
+      primary && (
+        <a
+          href={primary}
+          class="reveal group mt-10 inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3.5 font-medium text-accent-fg transition-transform hover:-translate-y-0.5"
+        >
+          Get in touch
+          <svg class="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      )
+    }
+
+    {
+      visible.length > 0 && (
+        <ul class="reveal mt-14 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+          {visible.map((c) => (
+            <li class="bg-bg">
+              <a
+                href={c.href}
+                target={c.external ? "_blank" : undefined}
+                rel={c.external ? "noopener" : undefined}
+                class="block p-5 transition-colors hover:bg-hover"
+              >
+                <span class="label">{c.label}</span>
+                <span class="mt-2 block truncate font-medium">{c.value}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</section>

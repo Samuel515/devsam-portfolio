@@ -1,0 +1,75 @@
+---
+import { hero, person, stats } from "@/data/site";
+---
+
+<section id="top" class="relative overflow-hidden pt-36 pb-20 sm:pt-44 sm:pb-28">
+  <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+  <div class="glow pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+    <div class="reveal flex flex-wrap items-center gap-3">
+      <span class="inline-flex items-center gap-2 rounded-full border border-line bg-elev/60 px-3 py-1.5 text-xs text-muted backdrop-blur">
+        <span class="status-dot" aria-hidden="true"></span>
+        Available for new work
+      </span>
+      <span class="font-mono text-xs text-subtle">
+        {person.location} · <time id="local-time" data-tz={person.timezone}>WAT</time>
+      </span>
+    </div>
+
+    <p class="reveal label mt-10" style="--delay: 60ms">{hero.eyebrow}</p>
+
+    <h1
+      class="reveal mt-4 max-w-4xl text-[clamp(2.75rem,8vw,6rem)] leading-[0.95] font-semibold tracking-[-0.045em] text-balance"
+      style="--delay: 120ms"
+    >
+      {hero.headline[0]}<br />
+      <span class="text-muted">{hero.headline[1]}</span>
+    </h1>
+
+    <p class="reveal mt-8 max-w-2xl text-lg leading-relaxed text-muted text-pretty sm:text-xl" style="--delay: 200ms">
+      {hero.intro}
+    </p>
+
+    <div class="reveal mt-10 flex flex-wrap items-center gap-3" style="--delay: 260ms">
+      <a
+        href="/?work"
+        class="group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-accent-fg transition-transform hover:-translate-y-0.5"
+      >
+        See my work
+        <svg class="size-4 transition-transform group-hover:translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
+      </a>
+      <a
+        href="/?contact"
+        class="inline-flex items-center gap-2 rounded-xl border border-line-strong px-5 py-3 text-sm font-medium transition-colors hover:bg-hover"
+      >
+        Start a conversation
+      </a>
+    </div>
+
+    <dl class="reveal mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-4" style="--delay: 320ms">
+      {
+        stats.map((s) => (
+          <div class="bg-bg px-5 py-6">
+            <dt class="label">{s.label}</dt>
+            <dd class="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">{s.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<script>
+  const el = document.getElementById("local-time");
+  if (el) {
+    const fmt = new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: el.dataset.tz,
+    });
+    const tick = () => (el.textContent = `${fmt.format(new Date())} WAT`);
+    tick();
+    setInterval(tick, 30_000);
+  }
+</script>

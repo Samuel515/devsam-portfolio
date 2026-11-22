@@ -1,0 +1,57 @@
+---
+import Base from "@/layouts/Base.astro";
+import Nav from "@/components/Nav.astro";
+import Hero from "@/components/Hero.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import ProductCard from "@/components/ProductCard.astro";
+import ClientCard from "@/components/ClientCard.astro";
+import Tools from "@/components/Tools.astro";
+import About from "@/components/About.astro";
+import Experience from "@/components/Experience.astro";
+import Services from "@/components/Services.astro";
+import Contact from "@/components/Contact.astro";
+import Footer from "@/components/Footer.astro";
+import { products, clientWork } from "@/data/site";
+---
+
+<Base>
+  <Nav />
+  <main id="main">
+    <Hero />
+
+    <section id="work" class="border-t border-line py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <SectionHeader
+          index="01"
+          label="Products I lead"
+          title="Products I architect, build and run."
+          intro="Live products where I own the engineering, from system design and the codebase to hosting and DNS."
+        />
+        <div class="space-y-6 sm:space-y-8">
+          {products.map((p, i) => <ProductCard project={p} index={i} />)}
+        </div>
+      </div>
+    </section>
+
+    <section id="clients" class="border-t border-line py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <SectionHeader
+          index="02"
+          label="Client work"
+          title="Websites built for clients."
+          intro="Fast, search-friendly sites that I designed, built and deployed for businesses and professionals."
+        />
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {clientWork.map((p, i) => <ClientCard project={p} index={i} />)}
+        </div>
+      </div>
+    </section>
+
+    <Tools />
+    <About />
+    <Experience />
+    <Services />
+    <Contact />
+  </main>
+  <Footer />
+</Base>
