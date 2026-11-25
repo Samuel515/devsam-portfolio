@@ -1,17 +1,20 @@
 ---
 import "@/styles/global.css";
-import { person, products, clientWork } from "@/data/site";
+import { person, products, clientWork, adsense, hubAdsEnabled } from "@/data/site";
 
 interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  /** Hub pages only. Never enable on main portfolio pages. */
+  showAds?: boolean;
 }
 
 const {
   title = `${person.name} · ${person.role}`,
   description = "Samuel Ogbodo is a fullstack software engineer in Nigeria, co-founder & CTO of VerityWave. He builds web products, AI tools, and fintech platforms end to end.",
   noindex = false,
+  showAds = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -97,6 +100,15 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {
+      showAds && hubAdsEnabled() && (
+        <script
+          async
+          crossorigin="anonymous"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsense.client}`}
+        />
+      )
+    }
     <slot name="head" />
   </head>
   <body class="min-h-dvh bg-bg text-fg selection:bg-accent">

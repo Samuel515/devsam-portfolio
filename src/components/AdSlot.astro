@@ -1,0 +1,28 @@
+---
+import { adsense, hubAdsEnabled } from "@/data/site";
+
+interface Props {
+  slot: keyof typeof adsense.slots;
+  class?: string;
+  label?: string;
+}
+
+const { slot, class: className = "", label = "Advertisement" } = Astro.props;
+const id = adsense.slots[slot];
+const show = hubAdsEnabled() && id.trim().length > 0;
+---
+
+{show && (
+  <aside class:list={["no-print", className]} aria-label={label}>
+    <p class="label mb-3 text-center">{label}</p>
+    <ins
+      class="adsbygoogle block min-h-[90px]"
+      style="display:block"
+      data-ad-client={adsense.client}
+      data-ad-slot={id}
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    />
+    <script is:inline>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </aside>
+)}

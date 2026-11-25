@@ -1,0 +1,196 @@
+---
+import Base from "@/layouts/Base.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import AdSlot from "@/components/AdSlot.astro";
+import { hubTools, getHubTool } from "@/data/tools-hub";
+
+export function getStaticPaths() {
+  return hubTools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
+}
+
+const { tool } = Astro.props;
+const related = tool.related.map((slug) => getHubTool(slug)).filter(Boolean);
+
+const title = `${tool.name} — Free Browser Tool | devsam`;
+const description = tool.description;
+const pageUrl = `https://devsamc.xyz/tools/${tool.slug}/`;
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "devsamc.xyz", item: "https://devsamc.xyz/" },
+    { "@type": "ListItem", position: 2, name: "Tools", item: "https://devsamc.xyz/tools/" },
+    { "@type": "ListItem", position: 3, name: tool.name, item: pageUrl },
+  ],
+};
+
+const appLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: tool.name,
+  url: tool.url,
+  description: tool.description,
+  applicationCategory: "UtilitiesApplication",
+  operatingSystem: "Any (runs in the browser)",
+  browserRequirements: "Requires JavaScript",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  author: { "@type": "Person", name: "Samuel Ogbodo", url: "https://devsamc.xyz" },
+};
+
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: tool.faqs.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+};
+---
+
+<Base title={title} description={description} showAds={true}>
+  <script type="application/ld+json" set:html={JSON.stringify([breadcrumbLd, appLd, faqLd])} slot="head" />
+  <Nav />
+  <main id="main">
+    <section class="relative overflow-hidden pt-36 pb-16 sm:pt-44 sm:pb-20">
+      <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="glow pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+        <nav aria-label="Breadcrumb" class="reveal">
+          <ol class="flex flex-wrap items-center gap-2 font-mono text-xs text-subtle">
+            <li><a href="/tools/" class="hover:text-fg transition-colors">Tools</a></li>
+            <li aria-hidden="true">/</li>
+            <li class="text-muted">{tool.name}</li>
+          </ol>
+        </nav>
+
+        <div class="mt-6 flex items-start gap-4 reveal" style="--delay: 60ms">
+          <span
+            class="grid size-14 shrink-0 place-items-center rounded-2xl font-mono text-sm font-bold"
+            style={`background: oklch(0.8 0.15 ${tool.hue} / 0.14); color: oklch(0.72 0.16 ${tool.hue}); box-shadow: inset 0 0 0 1px oklch(0.8 0.15 ${tool.hue} / 0.3);`}
+            aria-hidden="true"
+          >
+            {tool.glyph}
+          </span>
+          <div>
+            <p class="label">{tool.category}</p>
+            <h1 class="mt-2 max-w-4xl text-[clamp(2.25rem,6vw,4.5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-balance">{tool.name}</h1>
+          </div>
+        </div>
+
+        <p class="reveal mt-8 max-w-2xl text-lg leading-relaxed text-muted text-pretty sm:text-xl" style="--delay: 120ms">{tool.description}</p>
+
+        <div class="reveal mt-10 flex flex-wrap items-center gap-4" style="--delay: 180ms">
+          <a href={tool.url} target="_blank" rel="noopener" class="rounded-lg bg-fg px-5 py-3 text-sm font-medium text-bg transition-opacity hover:opacity-85">Open {tool.name}</a>
+          <a href="/tools/" class="text-sm text-muted underline decoration-line-strong underline-offset-4 hover:text-fg">All tools</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <div class="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+          <div>
+            <p class="label reveal"><span class="text-accent">01</span> / How it works</p>
+            <h2 class="reveal mt-4 text-[clamp(1.8rem,4vw,3rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">Simple steps, fast result.</h2>
+            <ol class="mt-8 space-y-4">
+              {tool.howItWorks.map((step, i) => (
+                <li class="reveal card flex gap-4 p-5" style={`--delay: ${i * 60}ms`}>
+                  <span class="font-mono text-sm text-accent">0{i + 1}</span>
+                  <p class="text-sm leading-relaxed text-muted">{step}</p>
+                </li>
+              ))}
+            </ol>
+
+            <AdSlot slot="hubTop" class="mt-12" />
+
+            <p class="label reveal mt-16"><span class="text-accent">02</span> / Features</p>
+            <h2 class="reveal mt-4 text-[clamp(1.8rem,4vw,3rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">What you get.</h2>
+            <div class="mt-8 grid gap-4 sm:grid-cols-2">
+              {tool.features.map((f, i) => (
+                <article class="reveal card p-5" style={`--delay: ${(i % 2) * 60}ms`}>
+                  <h3 class="font-medium tracking-tight">{f.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-muted">{f.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <aside class="space-y-6">
+            <div class="reveal card p-6">
+              <p class="label">Good for</p>
+              <ul class="mt-4 space-y-3">
+                {tool.useCases.map((u) => (
+                  <li class="flex gap-3 text-sm leading-relaxed text-muted">
+                    <span class="mt-[7px] size-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+                    {u}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="reveal card p-6">
+              <p class="label">Privacy</p>
+              <p class="mt-4 text-sm leading-relaxed text-muted">
+                {tool.name} runs in your browser. For normal use, your files and input stay on your device. Read the
+                <a href="/tools/privacy/" class="text-fg underline decoration-line-strong underline-offset-4 hover:text-accent"> tools privacy page</a>.
+              </p>
+            </div>
+
+            <AdSlot slot="hubMid" />
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28" aria-labelledby="faq">
+      <div class="mx-auto max-w-3xl px-5 sm:px-8">
+        <p class="label reveal"><span class="text-accent">03</span> / FAQ</p>
+        <h2 id="faq" class="reveal mt-4 text-[clamp(1.8rem,4vw,3rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">Common questions.</h2>
+        <div class="mt-10 border-t border-line">
+          {tool.faqs.map((f) => (
+            <details class="reveal group border-b border-line" data-smooth>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-medium tracking-tight [&::-webkit-details-marker]:hidden">
+                {f.q}
+                <span class="text-xl leading-none text-subtle transition-transform duration-300 group-[.is-open]:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="pb-5 text-sm leading-relaxed text-muted">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    {related.length > 0 && (
+      <section class="border-t border-line py-20 sm:py-28" aria-labelledby="related">
+        <div class="mx-auto max-w-6xl px-5 sm:px-8">
+          <p class="label reveal"><span class="text-accent">04</span> / Related tools</p>
+          <h2 id="related" class="reveal mt-4 text-[clamp(1.8rem,4vw,3rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-balance">More tools you might need.</h2>
+          <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {related.map((r, i) => r && (
+              <li class="reveal" style={`--delay: ${i * 60}ms`}>
+                <a href={`/tools/${r.slug}/`} class="card group flex h-full items-start gap-4 p-5">
+                  <span
+                    class="grid size-10 shrink-0 place-items-center rounded-xl font-mono text-[11px] font-bold"
+                    style={`background: oklch(0.8 0.15 ${r.hue} / 0.14); color: oklch(0.72 0.16 ${r.hue}); box-shadow: inset 0 0 0 1px oklch(0.8 0.15 ${r.hue} / 0.3);`}
+                    aria-hidden="true"
+                  >
+                    {r.glyph}
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block font-medium tracking-tight">{r.name}</span>
+                    <span class="mt-1 block text-sm leading-relaxed text-muted">{r.tagline}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+  </main>
+  <Footer />
+</Base>
+
+<script>
+  import { smoothDetails } from "@/scripts/accordion";
+  smoothDetails();
+</script>

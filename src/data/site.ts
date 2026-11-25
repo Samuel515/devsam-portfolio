@@ -281,6 +281,7 @@ export const tools = [
   { name: "Image Compressor", url: "https://compress.devsamc.xyz", tagline: "Shrink images by up to 80% with mozjpeg.", hue: 185, glyph: "CP" },
   { name: "PDF Toolkit", url: "https://pdf.devsamc.xyz", tagline: "Merge, split, rotate and create PDFs.", hue: 350, glyph: "PDF" },
   { name: "QR Code Generator", url: "https://qr.devsamc.xyz", tagline: "Styled QR codes for links, Wi-Fi and WhatsApp.", hue: 295, glyph: "QR" },
+  { name: "QR Code Scanner", url: "https://qrscan.devsamc.xyz", tagline: "Scan QR codes with your camera or an image.", hue: 280, glyph: "SC" },
   { name: "Dev Formatter", url: "https://dev.devsamc.xyz", tagline: "JSON, Base64, URL encoding and JWTs.", hue: 85, glyph: "{}" },
   { name: "Code Minifier", url: "https://minify.devsamc.xyz", tagline: "Minify JavaScript, CSS, HTML and JSON.", hue: 215, glyph: "MN" },
   { name: "JavaScript Obfuscator", url: "https://obfuscate.devsamc.xyz", tagline: "Protect JavaScript from copying.", hue: 140, glyph: "OB" },
@@ -290,3 +291,18 @@ export const tools = [
   { name: "Word Counter", url: "https://words.devsamc.xyz", tagline: "Words, characters, reading time and keywords.", hue: 235, glyph: "WC" },
   { name: "Password Generator", url: "https://password.devsamc.xyz", tagline: "Strong passwords and memorable passphrases.", hue: 165, glyph: "PW" },
 ];
+
+// AdSense for the tools hub only (/tools/*). Keep disabled until approval + slot IDs.
+export const adsense = {
+  publisherId: "pub-7349479508743936",
+  enabled: false,
+  slots: {
+    hubTop: "",
+    hubMid: "",
+  },
+  get client() {
+    return `ca-${this.publisherId}`;
+  },
+};
+
+export const hubAdsEnabled = () => adsense.enabled && adsense.publisherId.trim().length > 0;

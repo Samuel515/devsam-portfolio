@@ -1,0 +1,125 @@
+---
+import Base from "@/layouts/Base.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import AdSlot from "@/components/AdSlot.astro";
+import { hubTools, hubCategories } from "@/data/tools-hub";
+import { toolsRepo } from "@/data/site";
+
+const title = "Free Browser Tools · devsam tools";
+const description = "Free, private browser tools by Samuel Ogbodo. Convert images, work with PDFs, generate QR codes, format code, and more. Your files stay on your device.";
+
+const itemList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "devsam tools",
+  itemListElement: hubTools.map((t, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    url: `https://devsamc.xyz/tools/${t.slug}/`,
+    name: t.name,
+  })),
+};
+---
+
+<Base title={title} description={description} showAds={true}>
+  <script type="application/ld+json" set:html={JSON.stringify(itemList)} slot="head" />
+  <Nav />
+  <main id="main">
+    <section class="relative overflow-hidden pt-36 pb-16 sm:pt-44 sm:pb-24">
+      <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+      <div class="glow pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-6xl px-5 sm:px-8">
+        <p class="reveal label"><span class="text-accent">Tools</span> / Free browser utilities</p>
+        <h1 class="reveal mt-4 max-w-4xl text-[clamp(2.5rem,7vw,5rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-balance" style="--delay: 60ms">
+          Free tools that never see your files.
+        </h1>
+        <p class="reveal mt-8 max-w-2xl text-lg leading-relaxed text-muted text-pretty sm:text-xl" style="--delay: 120ms">
+          I build and maintain these browser-based tools for everyday file, image, PDF, and developer tasks. They run on your device with JavaScript, WebAssembly, and Web Workers, so your files stay private.
+        </p>
+        <div class="reveal mt-8 flex flex-wrap gap-3 text-sm text-muted" style="--delay: 180ms">
+          <span class="pill">No uploads</span>
+          <span class="pill">Free to use</span>
+          <span class="pill">Open source</span>
+          <span class="pill">Works in the browser</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28" aria-labelledby="all-tools">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <SectionHeader
+          index="01"
+          label="All tools"
+          title="Pick a tool, get the job done."
+          intro="Each tool has its own page with usage details, features, and FAQs. Open the tool directly, or read the guide first."
+        />
+
+        <AdSlot slot="hubTop" class="mb-12" />
+
+        <div class="space-y-12">
+          {hubCategories.map((category) => (
+            <div>
+              <h3 class="reveal mb-5 font-mono text-xs tracking-[0.08em] text-subtle uppercase">{category}</h3>
+              <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {hubTools.filter((t) => t.category === category).map((t, i) => (
+                  <li class="reveal" style={`--delay: ${(i % 3) * 60}ms`}>
+                    <article class="card flex h-full flex-col p-5">
+                      <div class="flex items-start gap-4">
+                        <span
+                          class="grid size-10 shrink-0 place-items-center rounded-xl font-mono text-[11px] font-bold"
+                          style={`background: oklch(0.8 0.15 ${t.hue} / 0.14); color: oklch(0.72 0.16 ${t.hue}); box-shadow: inset 0 0 0 1px oklch(0.8 0.15 ${t.hue} / 0.3);`}
+                          aria-hidden="true"
+                        >
+                          {t.glyph}
+                        </span>
+                        <div class="min-w-0">
+                          <h4 class="font-medium tracking-tight">{t.name}</h4>
+                          <p class="mt-1 text-sm leading-relaxed text-muted">{t.tagline}</p>
+                        </div>
+                      </div>
+                      <p class="mt-4 text-sm leading-relaxed text-subtle">{t.description}</p>
+                      <div class="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                        <a href={`/tools/${t.slug}/`} class="text-fg underline decoration-line-strong underline-offset-4 hover:text-accent">Read guide</a>
+                        <a href={t.url} target="_blank" rel="noopener" class="text-muted underline decoration-line-strong underline-offset-4 hover:text-fg">Open tool</a>
+                      </div>
+                    </article>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <AdSlot slot="hubMid" class="mt-16" />
+      </div>
+    </section>
+
+    <section class="border-t border-line py-20 sm:py-28" aria-labelledby="trust">
+      <div class="mx-auto max-w-6xl px-5 sm:px-8">
+        <SectionHeader
+          index="02"
+          label="Why these tools"
+          title="Built to be useful, not noisy."
+          intro="The goal is simple: open a tool, finish the task, and move on. No account, no clutter, and no file uploads for normal use."
+        />
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="reveal card p-6">
+            <h3 class="text-lg font-semibold tracking-tight">Private by design</h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">Most processing happens in your browser. Your files stay on your device unless a tool clearly says otherwise.</p>
+          </article>
+          <article class="reveal card p-6" style="--delay: 70ms">
+            <h3 class="text-lg font-semibold tracking-tight">Free and practical</h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">These are everyday utilities for real tasks: converting files, compressing PDFs, scanning QR codes, formatting code, and more.</p>
+          </article>
+          <article class="reveal card p-6" style="--delay: 140ms">
+            <h3 class="text-lg font-semibold tracking-tight">Open source</h3>
+            <p class="mt-3 text-sm leading-relaxed text-muted">The code is public on GitHub under the MIT license, so anyone can inspect how the tools work. <a href={toolsRepo} target="_blank" rel="noopener" class="text-fg underline decoration-line-strong underline-offset-4 hover:text-accent">View source</a>.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
